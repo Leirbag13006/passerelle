@@ -1,0 +1,223 @@
+@import "tailwindcss";
+
+/* Passerelle — tokens
+   Polices : Bricolage Grotesque (texte), Instrument Serif (accents), JetBrains Mono (billets) */
+@theme {
+  --color-void: #090909;
+  --color-paper: #f7f9fa;
+  --color-soft: #f0f0f0;
+  --color-steel: #828384;
+  --color-graphite: #474747;
+  --color-iron: #423738;
+  --color-ash: #6b6b6b;
+  --color-signal: #af50ff;
+  --color-lavender: #e1bdff;
+
+  --font-sans: "Bricolage Grotesque", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-serif: "Instrument Serif", "Tiempos Headline", Georgia, serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Sections : la nuit du hero prolongée. Textes vérifiés AAA sur navy. */
+  --color-navy: #0b1238;
+  --color-navy-2: #0f1849;
+  --color-navy-3: #16205c;
+  --color-line: #f7f9fa24;
+  --color-mist: #b9c0e0;
+  --color-accent: #ecd4ff;
+  --color-accent-2: #c79bff;
+
+  /* l'espacement reste en px : seul le texte grandit avec le réglage « taille du texte » */
+  --spacing: 4px;
+
+  --radius-card: 19.2px;
+  --radius-soft: 24px;
+  --radius-pill: 1584px;
+  --radius-btn: 8px;
+  --radius-ctrl: 6px;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@layer base {
+  html {
+    /* réglage de taille du texte du profil (1 à 2), en plus de la taille choisie dans le navigateur */
+    font-size: calc(100% * var(--text-scale, 1));
+    background: var(--color-void);
+    color: var(--color-paper);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    margin: 0;
+    background: var(--color-void);
+    font-family: var(--font-sans);
+    font-optical-sizing: auto;
+  }
+  ::selection {
+    background: var(--color-signal);
+    color: var(--color-paper);
+  }
+  :focus-visible {
+    outline: 3px solid var(--color-lavender);
+    outline-offset: 3px;
+  }
+}
+
+@layer utilities {
+  .hairline {
+    border-color: rgb(247 249 250 / 0.2);
+  }
+}
+
+/* Révélation du hero */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 28px, 0);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+}
+.reveal {
+  animation: rise 1.2s var(--ease-out-expo) both;
+  animation-delay: calc(var(--d, 0) * 1ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    animation: none;
+  }
+}
+
+/* Compostage : le tampon frappe le billet */
+@keyframes stamp-in {
+  0% {
+    opacity: 0;
+    transform: scale(1.7) rotate(4deg);
+  }
+  60% {
+    opacity: 0.95;
+    transform: scale(0.94) rotate(-15deg);
+  }
+  100% {
+    opacity: 0.9;
+    transform: scale(1) rotate(-13deg);
+  }
+}
+.stamp {
+  opacity: 0.9;
+  transform: rotate(-13deg);
+  animation: stamp-in 520ms cubic-bezier(0.2, 0.9, 0.3, 1) both;
+}
+/* le billet encaisse le coup */
+@keyframes ticket-thud {
+  0%, 100% { transform: none; }
+  45% { transform: translateY(2px) scale(0.995); }
+}
+.thud {
+  animation: ticket-thud 360ms ease-out 180ms;
+}
+
+/* Rail du trajet : arrêt atteint */
+@keyframes stop-pop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.18); }
+  100% { transform: scale(1); }
+}
+[data-stop][data-reached='true'] {
+  animation: stop-pop 500ms var(--ease-out-expo);
+}
+
+/* Ciel des sections : scintillement et dérive des nuages */
+@keyframes twinkle {
+  0%, 100% { opacity: 0.15; transform: scale(0.7); }
+  50% { opacity: 0.95; transform: scale(1); }
+}
+.twinkle {
+  animation: twinkle 4s ease-in-out infinite;
+}
+@keyframes drift {
+  from { transform: translate3d(-28px, 0, 0) scaleX(var(--flip, 1)); }
+  to { transform: translate3d(28px, 0, 0) scaleX(var(--flip, 1)); }
+}
+.drift {
+  transform: scaleX(var(--flip, 1));
+  animation: drift 50s ease-in-out infinite alternate;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stamp,
+  .thud,
+  [data-stop][data-reached='true'] {
+    animation: none;
+  }
+  .twinkle {
+    animation: none;
+    opacity: 0.6;
+  }
+  .drift {
+    animation: none;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Réglages d'interface du profil (posés sur <html> par ProfileProvider)
+   ------------------------------------------------------------------ */
+
+/* Police très lisible */
+[data-font='lisible'] {
+  --font-sans: "Atkinson Hyperlegible", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Atkinson Hyperlegible", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Atkinson Hyperlegible", ui-sans-serif, system-ui, sans-serif;
+}
+[data-font='lisible'] body {
+  letter-spacing: 0.01em;
+}
+
+/* Contraste élevé : textes secondaires en blanc, surfaces pleines, contours marqués */
+[data-contrast='eleve'] {
+  --color-mist: #ffffff;
+  --color-line: #f7f9fab3;
+  --color-accent: #f6eaff;
+}
+[data-contrast='eleve'] [class*='text-paper/'] {
+  color: var(--color-paper) !important;
+}
+[data-contrast='eleve'] .ticket {
+  background: var(--color-navy) !important;
+  backdrop-filter: none !important;
+  box-shadow: inset 0 0 0 2px var(--color-paper) !important;
+}
+[data-contrast='eleve'] p a,
+[data-contrast='eleve'] li > a:not([class*='rounded']) {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+[data-contrast='eleve'] :focus-visible {
+  outline: 4px solid #ffffff;
+  outline-offset: 3px;
+}
+
+/* Animations réduites (même effet que le réglage système) */
+[data-motion='reduit'] *,
+[data-motion='reduit'] *::before,
+[data-motion='reduit'] *::after {
+  animation: none !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* Mode simplifié : on retire le décor (nuages, étoiles, tracé) */
+[data-simplified='true'] .decor {
+  display: none !important;
+}
+
+/* titres qui reçoivent le focus par programme (changement d'étape) : annoncés, mais sans cadre */
+[tabindex='-1']:focus {
+  outline: none !important;
+}
