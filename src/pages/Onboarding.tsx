@@ -46,7 +46,8 @@ function OptionCard({ option, type, name, checked, onChange }: { option: Option;
   )
 }
 
-export default function Onboarding() {
+// returnTo / exitTo : où aller après l'enregistrement ou en quittant (site ou application)
+export default function Onboarding({ returnTo = '/espace', exitTo }: { returnTo?: string; exitTo?: string } = {}) {
   const { profile, save, preview } = useProfile()
   const navigate = useNavigate()
   const editing = !!profile
@@ -92,7 +93,7 @@ export default function Onboarding() {
     if (current < total) setIndex(current)
     else {
       save(createProfile(answers, effectivePrefs, profile))
-      navigate('/espace', { state: { welcome: !editing } })
+      navigate(returnTo, { state: { welcome: !editing } })
     }
   }
   const back = () => setIndex(Math.max(0, current - 2))
@@ -118,7 +119,7 @@ export default function Onboarding() {
           <span className="font-semibold">Passe</span>
           <span className="font-light">relle</span>
         </Link>
-        <Link to={editing ? '/espace' : '/'} className="min-h-11 content-center text-[0.9375rem] text-mist underline-offset-4 hover:text-paper hover:underline">
+        <Link to={exitTo ?? (editing ? '/espace' : '/')} className="min-h-11 content-center text-[0.9375rem] text-mist underline-offset-4 hover:text-paper hover:underline">
           {editing ? 'Annuler' : 'Quitter'}
         </Link>
       </header>
@@ -159,7 +160,7 @@ export default function Onboarding() {
             </button>
           </div>
 
-          <h1 ref={headingRef} tabIndex={-1} className="mt-6 text-[clamp(1.875rem,4vw,2.75rem)] leading-[1.08] font-medium tracking-[-0.03em] outline-none">
+          <h1 ref={headingRef} tabIndex={-1} className="mt-6 text-[clamp(1.75rem,4vw,2.75rem)] leading-[1.08] font-medium tracking-[-0.03em] hyphens-auto outline-none [overflow-wrap:anywhere]">
             {step.kind === 'intro' && answers.firstName ? `Faisons connaissance, ${answers.firstName}` : step.title}
           </h1>
           <p className="mt-3 max-w-[56ch] text-[1.0625rem] leading-[1.6] text-mist">{step.help}</p>

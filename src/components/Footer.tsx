@@ -5,6 +5,7 @@ const columns = [
     title: 'Passerelle',
     links: [
       ['Planifier un trajet', '/trajets'],
+      ['L’application', '/#application'],
       ['Le concept', '/#concept'],
       ['Pour qui ?', '/#pour-qui'],
       ['Créer mon profil', '/profil/creer'],

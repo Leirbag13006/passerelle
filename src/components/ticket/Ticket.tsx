@@ -33,10 +33,10 @@ const barsHeight = cursor
 // Encoches réellement découpées (masque) au niveau du talon : le billet marche sur n'importe quel fond
 const notchMask = {
   WebkitMaskImage:
-    'radial-gradient(circle at calc(100% - 56px) 0, transparent 12px, #000 12.5px), radial-gradient(circle at calc(100% - 56px) 100%, transparent 12px, #000 12.5px)',
+    'radial-gradient(circle at calc(100% - var(--stub)) 0, transparent 12px, #000 12.5px), radial-gradient(circle at calc(100% - var(--stub)) 100%, transparent 12px, #000 12.5px)',
   WebkitMaskComposite: 'source-in',
   maskImage:
-    'radial-gradient(circle at calc(100% - 56px) 0, transparent 12px, #000 12.5px), radial-gradient(circle at calc(100% - 56px) 100%, transparent 12px, #000 12.5px)',
+    'radial-gradient(circle at calc(100% - var(--stub)) 0, transparent 12px, #000 12.5px), radial-gradient(circle at calc(100% - var(--stub)) 100%, transparent 12px, #000 12.5px)',
   maskComposite: 'intersect',
 } as const
 
@@ -61,14 +61,15 @@ export function Ticket({
   'aria-label'?: string
 }) {
   return (
-    <Tag className={`ticket relative flex overflow-hidden rounded-card ${s.card} ${className}`} style={notchMask} {...rest}>
-      <div className="min-w-0 flex-1 p-7 md:p-8 xl:p-10">{children}</div>
+    // --stub : largeur du talon, plus étroit sur téléphone (les encoches suivent)
+    <Tag className={`ticket relative flex overflow-hidden rounded-card [--stub:40px] sm:[--stub:56px] ${s.card} ${className}`} style={notchMask} {...rest}>
+      <div className="min-w-0 flex-1 p-5 sm:p-7 md:p-8 xl:p-10">{children}</div>
       {/* talon détachable */}
-      <div aria-hidden="true" className={`relative flex w-14 shrink-0 flex-col items-center justify-center gap-4 border-l border-dashed py-8 ${s.stub}`}>
+      <div aria-hidden="true" className={`relative flex w-[var(--stub)] shrink-0 flex-col items-center justify-center gap-4 border-l border-dashed py-8 ${s.stub}`}>
         {stub ?? <Barcode className="h-full max-h-[340px]" />}
       </div>
       {stamp && (
-        <div className={`pointer-events-none absolute ${stampOn === 'stub' ? 'right-[-10px] bottom-6' : 'right-14 bottom-5 translate-x-1/2'}`}>{stamp}</div>
+        <div className={`pointer-events-none absolute ${stampOn === 'stub' ? 'right-[-10px] bottom-6' : 'right-[var(--stub)] bottom-5 translate-x-1/2'}`}>{stamp}</div>
       )}
     </Tag>
   )

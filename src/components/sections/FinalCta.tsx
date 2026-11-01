@@ -16,7 +16,7 @@ export default function FinalCta() {
     <section id="trajets" aria-labelledby="cta-title" className="mx-auto max-w-[1280px] px-4 py-28 md:px-10 lg:pl-[104px]">
       <p className="relative mb-6 flex items-center gap-3 text-[0.9375rem] font-medium text-accent">
         <StopMarker Icon={Spark} className={railPosition} />
-        <span className="font-mono text-[0.8125rem] tracking-[0.14em] text-paper/60 uppercase">Arrêt 5</span>
+        <span className="font-mono text-[0.8125rem] tracking-[0.14em] text-paper/60 uppercase">Arrêt 6</span>
         <span aria-hidden="true" className="text-paper/30">·</span>À vous de jouer
       </p>
       <div className="relative overflow-hidden rounded-[32px] bg-[linear-gradient(165deg,#1c2c92_0%,#121b5a_48%,#0d1440_100%)] px-6 py-14 ring-1 ring-line md:px-14 md:py-20">

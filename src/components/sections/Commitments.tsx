@@ -17,7 +17,7 @@ export default function Commitments() {
         <SectionHeading
           id="engagements-title"
           kicker="Nos engagements"
-          stop={{ n: 4, Icon: Train }}
+          stop={{ n: 5, Icon: Train }}
           lead="Un service sur l’accessibilité doit d’abord être accessible lui-même. Passerelle suit le référentiel RGAA et les recommandations WCAG 2.2."
         >
           L’accessibilité, <Accent>ce n’est pas une option</Accent>

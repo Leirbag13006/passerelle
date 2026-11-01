@@ -1,4 +1,11 @@
 import { Navigate, Route, Routes } from 'react-router'
+import AppCheckout from './app/AppCheckout'
+import AppHome from './app/AppHome'
+import AppProfile from './app/AppProfile'
+import AppShell from './app/AppShell'
+import { AppTicket, AppTicketList } from './app/AppTickets'
+import AppTrips from './app/AppTrips'
+import AppDemo from './pages/AppDemo'
 import Checkout from './pages/Checkout'
 import Home from './pages/Home'
 import Onboarding from './pages/Onboarding'
@@ -31,6 +38,18 @@ export default function App() {
         <Route path="/aide" element={<Help />} />
         <Route path="/confidentialite" element={<Privacy />} />
         <Route path="/mentions-legales" element={<Legal />} />
+        <Route path="/application" element={<AppDemo />} />
+        {/* application mobile */}
+        <Route path="/app" element={<AppShell />}>
+          <Route index element={<AppHome />} />
+          <Route path="trajets" element={<AppTrips />} />
+          <Route path="commande" element={<AppCheckout />} />
+          <Route path="billets" element={<AppTicketList />} />
+          <Route path="billets/:code" element={<AppTicket />} />
+          <Route path="en-route/:code" element={<EnRoute basePath="/app" />} />
+          <Route path="profil" element={<AppProfile />} />
+          <Route path="profil/creer" element={<Onboarding returnTo="/app/profil" exitTo="/app/profil" />} />
+        </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </>

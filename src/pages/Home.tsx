@@ -10,6 +10,7 @@ import FinalCta from '../components/sections/FinalCta'
 import ForEveryone from '../components/sections/ForEveryone'
 import HowItWorks from '../components/sections/HowItWorks'
 import ProfileDemo from '../components/sections/ProfileDemo'
+import AppShowcase from '../components/sections/AppShowcase'
 
 export default function Home() {
   const journey = useRef<HTMLDivElement>(null)
@@ -39,6 +40,7 @@ export default function Home() {
             <HowItWorks />
             <ForEveryone />
             <ProfileDemo />
+            <AppShowcase />
             <Commitments />
             <FinalCta />
           </div>

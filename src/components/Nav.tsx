@@ -5,6 +5,7 @@ import { useTickets } from '../planner/tickets'
 
 const links = [
   { label: 'Trajets', href: '/trajets' },
+  { label: 'L’app', href: '/#application' },
   { label: 'Le concept', href: '/#concept' },
   { label: 'Pour qui ?', href: '/#pour-qui' },
   { label: 'Essayer', href: '/#demo' },

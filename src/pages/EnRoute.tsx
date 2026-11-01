@@ -15,7 +15,8 @@ import { useProfile } from '../profile/ProfileContext'
 // L'accompagnement dépend du profil : niveau de détail, guidage vocal ou visuel,
 // accès sans marche, messages rassurants, aide immédiate, nouvel itinéraire en cas d'imprévu.
 
-export default function EnRoute() {
+// basePath : préfixe des liens (« /app » dans l'application, vide sur le site)
+export default function EnRoute({ basePath = '' }: { basePath?: string } = {}) {
   const { code } = useParams()
   const { tickets } = useTickets()
   const { profile, prefs } = useProfile()
@@ -86,8 +87,9 @@ export default function EnRoute() {
     if (t) QRCode.toString(`PASSERELLE|${t.code}`, { type: 'svg', margin: 1, color: { dark: '#0b1238', light: '#ffffff' } }).then(setQr)
   }, [t])
 
-  if (!t || !current) return <Navigate to="/billets" replace />
-  if ((t.status ?? 'valide') !== 'valide') return <Navigate to={`/billet/${t.code}`} replace />
+  const ticketPath = (c: string) => (basePath ? `${basePath}/billets/${c}` : `/billet/${c}`)
+  if (!t || !current) return <Navigate to={`${basePath}/billets`} replace />
+  if ((t.status ?? 'valide') !== 'valide') return <Navigate to={ticketPath(t.code)} replace />
 
   // changer de niveau de détail sans perdre sa place : on se recale sur l'heure de l'étape en cours
   const switchDetail = () => {
@@ -142,17 +144,23 @@ export default function EnRoute() {
     ) : null
 
   return (
-    <div className="flex min-h-svh flex-col bg-navy text-paper">
+    <div className={`flex flex-col bg-navy text-paper ${basePath ? 'min-h-full' : 'min-h-svh'}`}>
       {/* barre du haut : sortir, progression, aide */}
       <header className="border-b border-line">
         <div className="mx-auto flex max-w-[860px] items-center justify-between gap-4 px-4 py-3 md:px-8">
-          <Link to={`/billet/${t.code}`} className="min-h-12 content-center text-[1rem] text-mist underline-offset-4 hover:text-paper hover:underline">
+          <Link to={ticketPath(t.code)} className="min-h-12 content-center text-[1rem] text-mist underline-offset-4 hover:text-paper hover:underline">
             Quitter
           </Link>
-          <p className="font-mono text-[0.875rem] tracking-[0.12em] text-paper/80 uppercase" aria-live="polite">
-            Étape {Math.min(index, steps.length - 1) + 1} sur {steps.length}
+          <p className="font-mono text-[0.875rem] tracking-[0.12em] whitespace-nowrap text-paper/80 uppercase" aria-live="polite">
+            {/* format court sur téléphone, phrase complète pour les lecteurs d'écran */}
+            <span aria-hidden="true" className="sm:hidden">
+              {Math.min(index, steps.length - 1) + 1} / {steps.length}
+            </span>
+            <span className="sr-only sm:not-sr-only">
+              Étape {Math.min(index, steps.length - 1) + 1} sur {steps.length}
+            </span>
           </p>
-          <button type="button" onClick={openHelp} className="min-h-12 rounded-full bg-[#ffb4c4] px-5 text-[1rem] font-semibold text-navy">
+          <button type="button" onClick={openHelp} className="min-h-12 rounded-full bg-[#ffb4c4] px-4 text-[1rem] font-semibold whitespace-nowrap text-navy sm:px-5">
             J’ai besoin d’aide
           </button>
         </div>
@@ -287,7 +295,7 @@ export default function EnRoute() {
               Retour
             </button>
             {finished ? (
-              <Link to={`/billet/${t.code}`} className="flex min-h-16 items-center justify-center gap-3 rounded-full bg-accent text-[1.1875rem] font-semibold text-navy">
+              <Link to={ticketPath(t.code)} className="flex min-h-16 items-center justify-center gap-3 rounded-full bg-accent text-[1.1875rem] font-semibold text-navy">
                 {primaryLabel.arrive}
               </Link>
             ) : (
